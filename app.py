@@ -11,7 +11,8 @@ SOURCE_ID = "src_nNE4vEZ0EeEHNTUOdIT6S"  # cha_BgUii5mzrVWD9941P6Qnw
 
 # Crear la app Flask
 app = Flask(__name__)
-CORS(app)  # Permitir peticiones desde el frontend
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 
 print("🧪 API_KEY (desde .env):", API_KEY)
 print("📎 SOURCE_ID inicial:", SOURCE_ID)
