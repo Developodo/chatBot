@@ -3,316 +3,393 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chat ETPOEP - Córdoba</title>
+  <title>Chat ETPOEP - Miniatura Sidebar</title>
   <style>
-* {
-  box-sizing: border-box;
-}
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f7fa; /* gris muy claro */
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  color: #2c3e50; /* azul grisáceo oscuro */
-}
-.chat-container {
-  background: #ffffff; /* blanco puro */
-  border-radius: 16px;
-  padding: 24px;
-  width: 90%;
-  box-shadow: 0 8px 24px rgba(100, 116, 139, 0.1); /* sombra más suave y azulada */
-  display: flex;
-  flex-direction: column;
-  height: 90vh;
-  max-height: 700px;
-}
-h1 {
-  margin: 0 0 18px;
-  font-weight: 700;
-  font-size: 1.8rem;
-  text-align: center;
-  color: #34495e; /* azul gris medio */
-}
-input[type="text"], input[type="password"] {
-  padding: 14px 16px;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1.8px solid #d1d9e6; /* borde azul muy claro */
-  outline: none;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  width: 100%;
-  margin-bottom: 14px;
-  background-color: #fefeff; /* blanco muy suave */
-  color: #2c3e50;
-}
-input[type="text"]:focus, input[type="password"]:focus {
-  border-color: #7ea9e1; /* azul claro */
-  box-shadow: 0 0 8px rgba(126, 169, 225, 0.5);
-}
-button {
-  background-color: #7ea9e1; /* azul claro */
-  color: white;
-  font-weight: 700;
-  padding: 14px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-  width: 100%;
-  user-select: none;
-  margin-bottom: 14px;
-  box-shadow: 0 4px 12px rgba(126, 169, 225, 0.4);
-}
-button:disabled {
-  background-color: #c4d0ea; /* azul pastel muy suave */
-  cursor: not-allowed;
-  box-shadow: none;
-}
-button:hover:not(:disabled) {
-  background-color: #6794d9; /* azul medio */
-  box-shadow: 0 6px 16px rgba(103, 148, 217, 0.6);
-}
-.response {
-  margin-top: 20px;
-  background: #f0f4ff; /* azul pálido */
-  border-radius: 12px;
-  padding: 16px;
-  flex-grow: 1;
-  overflow-y: auto;
-  font-family: Arial, Helvetica, sans-serif;
-  white-space: pre-wrap;
-  color: #34495e; /* azul gris medio */
-  box-shadow: inset 0 0 8px #d6e0ff; /* sombra interior azul suave */
-}
-.loading {
-  color: #7ea9e1; /* azul claro */
-  font-style: italic;
-}
-/* Sección upload oculta inicialmente */
-#upload-section {
-  margin-top: 24px;
-  border-top: 1px solid #d1d9e6; /* línea azul muy clara */
-  padding-top: 20px;
-  display: none;
-}
-#upload-section label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: #2c3e50;
-}
-#upload-response {
-  margin-top: 12px;
-  font-size: 0.9rem;
-  color: #34495e;
-  white-space: pre-wrap;
-  min-height: 24px;
-}
-/* Contenedor para acceso */
-#access-upload-container {
-  margin-top: 24px;
-}
-#password-input {
-  display: none;
-  margin-top: 8px;
-}
-#access-error {
-  color: #e74c3c; /* rojo suave para errores */
-  font-size: 0.9rem;
-  margin-top: 6px;
-  min-height: 20px;
-}
-/* Responsive */
-@media (max-width: 480px) {
-  .chat-container {
-    height: 100vh;
-    max-height: none;
-    border-radius: 0;
-    padding: 20px 16px;
-  }
-  input[type="text"], input[type="password"], button {
-    font-size: 1.1rem;
-  }
-}
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+    }
 
+    /* Sidebar container */
+    #chat-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      max-width: 90vw;
+      height: 100vh;
+      background: #fff;
+      box-shadow: -4px 0 12px rgba(100, 116, 139, 0.15);
+      border-radius: 8px 0 0 8px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease;
+      transform: translateX(0);
+      z-index: 9999;
+    }
+
+    /* Sidebar colapsado - solo se ve el botón */
+    #chat-sidebar.collapsed {
+      width: 60px;
+      transform: translateX(calc(100% - 60px));
+      border-radius: 8px 0 0 8px;
+    }
+
+    /* Toggle button */
+    #toggle-btn {
+      position: absolute;
+      left: -40px;
+      top: 20px;
+      width: 36px;
+      height: 36px;
+      background: #7ea9e1;
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(126, 169, 225, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      z-index: 10000;
+    }
+    #toggle-btn:hover {
+      background-color: #6794d9;
+    }
+
+    /* Contenido chat */
+    .chat-container {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+    #chat-sidebar.collapsed .chat-container {
+      display: none;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      margin: 0 0 12px;
+      color: #34495e;
+      text-align: center;
+    }
+
+    input[type="text"], input[type="password"] {
+      padding: 10px 12px;
+      font-size: 0.9rem;
+      border-radius: 8px;
+      border: 1.5px solid #d1d9e6;
+      outline: none;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+      width: 100%;
+      margin-bottom: 10px;
+      background-color: #fefeff;
+      color: #2c3e50;
+    }
+    input[type="text"]:focus, input[type="password"]:focus {
+      border-color: #7ea9e1;
+      box-shadow: 0 0 6px rgba(126, 169, 225, 0.5);
+    }
+
+    button {
+      background-color: #7ea9e1;
+      color: white;
+      font-weight: 700;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      user-select: none;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 10px rgba(126, 169, 225, 0.4);
+    }
+    button:disabled {
+      background-color: #c4d0ea;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    button:hover:not(:disabled) {
+      background-color: #6794d9;
+      box-shadow: 0 6px 14px rgba(103, 148, 217, 0.6);
+    }
+
+    .response {
+      flex-grow: 1;
+      background: #f0f4ff;
+      border-radius: 10px;
+      padding: 10px;
+      overflow-y: auto;
+      font-family: Arial, Helvetica, sans-serif;
+      white-space: pre-wrap;
+      color: #34495e;
+      box-shadow: inset 0 0 6px #d6e0ff;
+      font-size: 0.9rem;
+    }
+
+    .loading {
+      color: #7ea9e1;
+      font-style: italic;
+    }
+
+    #upload-section {
+      margin-top: 16px;
+      border-top: 1px solid #d1d9e6;
+      padding-top: 12px;
+      display: none;
+    }
+    #upload-section label {
+      font-weight: 600;
+      color: #2c3e50;
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+    }
+    #upload-response {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #34495e;
+      min-height: 20px;
+      white-space: pre-wrap;
+    }
+
+    #access-upload-container {
+      margin-top: 16px;
+    }
+    #password-input {
+      display: none;
+      margin-top: 8px;
+    }
+    #access-error {
+      color: #e74c3c;
+      font-size: 0.85rem;
+      margin-top: 4px;
+      min-height: 18px;
+    }
+
+    /* Responsive pequeño */
+    @media (max-width: 400px) {
+      #chat-sidebar {
+        width: 100vw;
+        height: 50vh;
+        bottom: 0;
+        top: auto;
+        border-radius: 8px 8px 0 0;
+        transform: translateY(0);
+      }
+      #chat-sidebar.collapsed {
+        transform: translateY(calc(100% - 50px));
+        width: 100vw;
+        height: 50px;
+      }
+      #toggle-btn {
+        left: auto;
+        right: 20px;
+        top: -40px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="chat-container" role="main" aria-label="Chat con PDF">
-    <h1>📄 Chat ETPOEP - Córdoba</h1>
 
-    <!-- Chat principal -->
-    <input
-      id="question"
-      type="text"
-      placeholder="Escribe tu pregunta y presiona Enter..."
-      aria-label="Pregunta"
-      autocomplete="off"
-      autofocus
-    />
-    <button id="sendBtn" onclick="askPDF()">Enviar</button>
-    <div class="response" id="response" aria-live="polite">La respuesta aparecerá aquí.</div>
+  <aside id="chat-sidebar" aria-label="Chat ETPOEP">
+    <button id="toggle-btn" aria-expanded="true" aria-controls="chat-content" aria-label="Colapsar chat">
+ <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" stroke="#34495e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="7" width="18" height="14" rx="2" ry="2"></rect>
+    <circle cx="8.5" cy="14.5" r="1.5"></circle>
+    <circle cx="15.5" cy="14.5" r="1.5"></circle>
+    <line x1="12" y1="7" x2="12" y2="3"></line>
+    <line x1="9" y1="3" x2="15" y2="3"></line>
+  </svg>
 
-    <!-- Botón para mostrar input de contraseña -->
-    <div id="access-upload-container">
-      <button id="access-upload-btn" onclick="showPasswordInput()">Acceder a subida de PDF</button>
-      <div id="password-input">
-        <input
-          type="password"
-          id="upload-password"
-          placeholder="Introduce contraseña"
-          aria-label="Contraseña para subir PDF"
-          autocomplete="off"
-        />
-        <button id="submit-password-btn" onclick="checkPassword()">Ingresar</button>
-        <div id="access-error" role="alert" aria-live="assertive"></div>
+    </button>
+    <div class="chat-container" id="chat-content" role="main" aria-live="polite" aria-atomic="true">
+      <h1>📄 Chat ETPOEP - Córdoba</h1>
+
+      <input
+        id="question"
+        type="text"
+        placeholder="Escribe tu pregunta y presiona Enter..."
+        aria-label="Pregunta"
+        autocomplete="off"
+        autofocus
+      />
+      <button id="sendBtn" onclick="askPDF()">Enviar</button>
+      <div class="response" id="response">La respuesta aparecerá aquí.</div>
+
+      <div id="access-upload-container">
+        <button id="access-upload-btn" onclick="showPasswordInput()">Acceder a subida de PDF</button>
+        <div id="password-input">
+          <input
+            type="password"
+            id="upload-password"
+            placeholder="Introduce contraseña"
+            aria-label="Contraseña para subir PDF"
+            autocomplete="off"
+          />
+          <button id="submit-password-btn" onclick="checkPassword()">Ingresar</button>
+          <div id="access-error" role="alert" aria-live="assertive"></div>
+        </div>
+      </div>
+
+      <div id="upload-section" aria-label="Configuración">
+        <label for="pdf-file">Configuración</label>
+        <input type="file" id="pdf-file" accept="application/pdf" />
+        <button id="uploadBtn" onclick="uploadPDF()">Subir PDF</button>
+        <div id="upload-response" aria-live="polite"></div>
       </div>
     </div>
+  </aside>
 
-    <!-- Sección upload oculta -->
-    <div id="upload-section" aria-label="Configuración">
-      <label for="pdf-file">Configuración</label>
-      <input type="file" id="pdf-file" accept="application/pdf" />
-      <button id="uploadBtn" onclick="uploadPDF()">Subir PDF</button>
-      <div id="upload-response" aria-live="polite"></div>
-    </div>
-  </div>
+<script>
+  const sidebar = document.getElementById('chat-sidebar');
+  const toggleBtn = document.getElementById('toggle-btn');
+  const chatContent = document.getElementById('chat-content');
 
-  <script>
-    const API_URL = "http://localhost:5000/ask"; // Cambia aquí por tu backend desplegado
-    const UPLOAD_URL = "http://localhost:5000/upload";
+  toggleBtn.addEventListener('click', () => {
+    const collapsed = sidebar.classList.toggle('collapsed');
+    toggleBtn.setAttribute('aria-expanded', !collapsed);
+    toggleBtn.setAttribute('aria-label', collapsed ? 'Expandir chat' : 'Colapsar chat');
+    //toggleBtn.textContent = collapsed ? '›' : '‹';
 
-    const input = document.getElementById("question");
-    const responseDiv = document.getElementById("response");
-    const sendBtn = document.getElementById("sendBtn");
-
-    // Enviar al presionar Enter
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        askPDF();
-      }
-    });
-
-    async function askPDF() {
-      const message = input.value.trim();
-      if (!message) {
-        alert("Por favor, escribe una pregunta.");
-        return;
-      }
-
-      input.disabled = true;
-      sendBtn.disabled = true;
-      responseDiv.innerHTML = "<span class='loading'>⏳ Procesando...</span>";
-
-      try {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          responseDiv.innerHTML = linkify(data.content || "Respuesta vacía.");
-        } else {
-          responseDiv.textContent = `⚠️ Error: ${data.error || "Desconocido"}`;
-        }
-      } catch (err) {
-        responseDiv.textContent = "⚠️ Error de red: " + err.message;
-      } finally {
-        input.disabled = false;
-        sendBtn.disabled = false;
-        input.focus();
-        responseDiv.scrollTop = responseDiv.scrollHeight;
-      }
-
-      //input.value = "";
+    if (!collapsed) {
+      // Al expandir, hacer focus en input
+      document.getElementById('question').focus();
     }
-function linkify(text) {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.replace(urlRegex, url => {
-    const safeUrl = url.replace(/\s/g, '%20'); // esto ya reemplaza todos los espacios
-    return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${url}</a>`;
   });
-}
 
+  // Código original (adaptado un poco para quitar un error)
+  const API_URL = "http://localhost:5000/ask"; // Cambia aquí por tu backend desplegado
+  const UPLOAD_URL = "http://localhost:5000/upload";
 
+  const input = document.getElementById("question");
+  const responseDiv = document.getElementById("response");
+  const sendBtn = document.getElementById("sendBtn");
 
-responseDiv.innerHTML = linkify(data.content || "Respuesta vacía.");
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      askPDF();
+    }
+  });
 
-    // ——— SECCIÓN DE ACCESO Y SUBIDA DE PDF PROTEGIDA ———
-
-
-
-    function showPasswordInput() {
-      document.getElementById("password-input").style.display = "block";
-      document.getElementById("access-upload-btn").disabled = true;
-      document.getElementById("upload-password").focus();
+  async function askPDF() {
+    const message = input.value.trim();
+    if (!message) {
+      alert("Por favor, escribe una pregunta.");
+      return;
     }
 
-    function checkPassword() {
-            const secretPasswordBase64 = "MjAyNQ=="; // '2025'
-      const pwInput = document.getElementById("upload-password");
-      const errDiv = document.getElementById("access-error");
-      const password = pwInput.value.trim();
+    input.disabled = true;
+    sendBtn.disabled = true;
+    responseDiv.innerHTML = "<span class='loading'>⏳ Procesando...</span>";
 
-      if (btoa(password) === secretPasswordBase64) {
-        errDiv.textContent = "";
-        document.getElementById("upload-section").style.display = "block";
-        // Ocultar acceso y password input
-        document.getElementById("access-upload-container").style.display = "none";
+    try {
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        responseDiv.innerHTML = linkify(data.content || "Respuesta vacía.");
       } else {
-        errDiv.textContent = "Contraseña incorrecta. Inténtalo de nuevo.";
-        pwInput.value = "";
-        pwInput.focus();
+        responseDiv.textContent = `⚠️ Error: ${data.error || "Desconocido"}`;
       }
+    } catch (err) {
+      responseDiv.textContent = "⚠️ Error de red: " + err.message;
+    } finally {
+      input.disabled = false;
+      sendBtn.disabled = false;
+      input.focus();
+      responseDiv.scrollTop = responseDiv.scrollHeight;
+    }
+  }
+
+  function linkify(text) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return text.replace(urlRegex, url => {
+      const safeUrl = url.replace(/\s/g, '%20');
+      return `<a href="${safeUrl}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    });
+  }
+
+  function showPasswordInput() {
+    document.getElementById("password-input").style.display = "block";
+    document.getElementById("access-upload-btn").disabled = true;
+    document.getElementById("upload-password").focus();
+  }
+
+  function checkPassword() {
+    const secretPasswordBase64 = "MjAyNQ=="; // '2025'
+    const pwInput = document.getElementById("upload-password");
+    const errDiv = document.getElementById("access-error");
+    const password = pwInput.value.trim();
+
+    if (btoa(password) === secretPasswordBase64) {
+      errDiv.textContent = "";
+      document.getElementById("upload-section").style.display = "block";
+      document.getElementById("access-upload-container").style.display = "none";
+    } else {
+      errDiv.textContent = "Contraseña incorrecta. Inténtalo de nuevo.";
+      pwInput.value = "";
+      pwInput.focus();
+    }
+  }
+
+  async function uploadPDF() {
+    const fileInput = document.getElementById("pdf-file");
+    const uploadResponseDiv = document.getElementById("upload-response");
+
+    if (!fileInput.files.length) {
+      alert("Por favor, selecciona un archivo PDF.");
+      return;
     }
 
-    async function uploadPDF() {
-      const fileInput = document.getElementById("pdf-file");
-      const uploadResponseDiv = document.getElementById("upload-response");
-
-      if (!fileInput.files.length) {
-        alert("Por favor, selecciona un archivo PDF.");
-        return;
-      }
-
-      const file = fileInput.files[0];
-      if (file.type !== "application/pdf") {
-        alert("Solo se permiten archivos PDF.");
-        return;
-      }
-
-      uploadResponseDiv.textContent = "⏳ Subiendo archivo...";
-
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const res = await fetch(UPLOAD_URL, {
-          method: "POST",
-          body: formData
-        });
-
-        const data = await res.json();
-
-        if (res.ok) {
-          uploadResponseDiv.textContent = `✅ Archivo subido correctamente. Source ID: ${data.sourceId}`;
-          fileInput.value = "";
-        } else {
-          uploadResponseDiv.textContent = `⚠️ Error: ${data.error || "Desconocido"}`;
-        }
-      } catch (err) {
-        uploadResponseDiv.textContent = "⚠️ Error de red: " + err.message;
-      }
+    const file = fileInput.files[0];
+    if (file.type !== "application/pdf") {
+      alert("Solo se permiten archivos PDF.");
+      return;
     }
-  </script>
+
+    uploadResponseDiv.textContent = "⏳ Subiendo archivo...";
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await fetch(UPLOAD_URL, {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        uploadResponseDiv.textContent = `✅ Archivo subido correctamente. Source ID: ${data.sourceId}`;
+        fileInput.value = "";
+      } else {
+        uploadResponseDiv.textContent = `⚠️ Error: ${data.error || "Desconocido"}`;
+      }
+    } catch (err) {
+      uploadResponseDiv.textContent = "⚠️ Error de red: " + err.message;
+    }
+  }
+</script>
+
 </body>
 </html>
+
