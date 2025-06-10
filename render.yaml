@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: chatpdf-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: API_KEY
+        fromDotEnv: true
